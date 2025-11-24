@@ -10,6 +10,8 @@ authors = [
 ]
 dependencies = [
   "msgspec",
+  "numpy>=1.0.0",
+  "beartype",
 ]
 description = "Package containing utility functions for apps."
 readme = "README.md"
@@ -23,3 +25,4 @@ classifiers = [
 # [project.urls]
 # Homepage = "https://github.com/SikaSIS/hybrid-rag"
 # Issues = "https://github.com/SikaSIS/hybrid-rag/issues"
+
