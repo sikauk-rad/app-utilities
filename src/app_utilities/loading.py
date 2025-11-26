@@ -3,7 +3,7 @@ from functools import partial
 from os import getenv, environ, PathLike
 from pathlib import Path
 import re
-from typing import Any
+from typing import Any, TypeGuard
 import uuid
 
 from beartype import beartype
@@ -43,38 +43,42 @@ def env_string_to_dict(
     """
 
     return dict(map(
-        partial(re.split, r'[\s+]=[\s+]'), 
+        partial(re.split, r'[\s+]=[\s+]', maxsplit = 1), 
         filter(None, env_string.replace('"', '').splitlines())
     ))
 
 
-def check_keys_not_missing(
-    required_keys: Iterable[Hashable],
-    mapping: Mapping,
+def check_keys_not_missing[K: Hashable, V](
+    required_keys: Iterable[K],
+    mapping: Mapping[K, V | None],
     mapping_name: str | None = None,
-) -> None:
+) -> TypeGuard[Mapping[K, V]]:
 
     """
     Check if all required keys are present in the given mapping.
 
     Args:
-        required_keys (Iterable[Hashable]): An iterable of keys that must be present in the mapping.
+        required_keys (Iterable[Hashable]): An iterable of keys that must be present in 
+        the mapping.
         mapping (Mapping[Hashable, Any]): The mapping (e.g., dictionary) to check against.
-        mapping_name (Optional[str]): An optional name for the mapping, used in the error message.
+        mapping_name (Optional[str]): An optional name for the mapping, used in the error
+        message.
 
     Raises:
-        KeyError: If any required keys are missing from the mapping, an error is raised with a message indicating which keys are missing and from which mapping they are expected.
+        KeyError: If any required keys are missing from the mapping, an error is raised 
+        with a message indicating which keys are missing and from which mapping they are 
+        expected.
     """
 
     if not isinstance(required_keys, Set):
         required_keys = {*required_keys}
     missing_keys = required_keys - mapping.keys()
     if not missing_keys:
-        return
-
-    missing_keys_str = ", ".join([*map(str, missing_keys)])
-    error_suffix = f' in {mapping_name}.' if mapping_name else '.'
-    raise KeyError(f'missing keys {missing_keys_str}{error_suffix}')
+        return True
+    else:
+        missing_keys_str = ", ".join([*map(str, missing_keys)])
+        error_suffix = f' in {mapping_name}.' if mapping_name else '.'
+        raise KeyError(f'missing keys {missing_keys_str}{error_suffix}')
 
 
 def load_id_from_env(
@@ -85,7 +89,8 @@ def load_id_from_env(
     Load a UUID from an environment variable.
 
     Args:
-        env_variable_name (str): The name of the environment variable that contains the UUID.
+        env_variable_name (str): The name of the environment variable that contains the 
+        UUID.
 
     Returns:
         uuid.UUID: The UUID loaded from the environment variable.
