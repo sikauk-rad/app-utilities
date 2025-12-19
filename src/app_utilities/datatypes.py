@@ -10,4 +10,4 @@ CompatibleNumber = int | float | np.integer | np.floating | Decimal
 CompatibleInt = int | np.integer
 CompatibleFloat = float | np.floating | Decimal
 
-JSONable = dict[str, JSONable] | list[JSONable] | str | int | float | bool | None
+JSONable = dict[str, "JSONable"] | list["JSONable"] | str | int | float | bool | None
