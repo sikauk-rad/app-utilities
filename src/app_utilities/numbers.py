@@ -1,9 +1,8 @@
-from beartype import beartype
 import numpy as np
 
 from .datatypes import CompatibleNumber
 
-@beartype
+
 def get_optimal_intype(
     number: CompatibleNumber,
 ) -> type[np.integer] | type[np.floating]:
@@ -50,7 +49,6 @@ def get_optimal_intype(
         return np.float64
 
 
-@beartype
 def get_optimal_uintype(
     number: CompatibleNumber,
 ) -> type[np.integer] | type[np.floating]:

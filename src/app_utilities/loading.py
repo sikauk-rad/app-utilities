@@ -1,16 +1,12 @@
 from collections.abc import Iterable, Set, Hashable, Mapping
 from functools import partial
+import json
 from os import getenv, environ, PathLike
 from pathlib import Path
 import re
 from typing import Any, TypeGuard
 import uuid
 
-from beartype import beartype
-from msgspec import json
-
-
-@beartype
 def env_string_to_dict(
     env_string: str
 ) -> dict[str, str]:
@@ -60,7 +56,8 @@ def check_keys_not_missing[K: Hashable, V](
     Args:
         required_keys (Iterable[Hashable]): An iterable of keys that must be present in 
         the mapping.
-        mapping (Mapping[Hashable, Any]): The mapping (e.g., dictionary) to check against.
+        mapping (Mapping[Hashable, Any]): The mapping (e.g., dictionary) to check 
+        against.
         mapping_name (Optional[str]): An optional name for the mapping, used in the error
         message.
 
@@ -110,7 +107,7 @@ def load_id_from_env(
 
 
 def load_config_from_path(
-    config_path: PathLike,
+    config_path: PathLike[str],
     required_keys: Iterable[str],
     config_uuid: uuid.UUID,
 ) -> dict[str, Any]:
@@ -120,7 +117,8 @@ def load_config_from_path(
 
     Args:
         config_path (PathLike): The path to the configuration file, which must be a JSON.
-        required_keys (Iterable[str]): A collection of keys that must be present in the configuration.
+        required_keys (Iterable[str]): A collection of keys that must be present in the 
+        configuration.
         config_uuid (uuid.UUID): The UUID to load the configuration for.
 
     Returns:
@@ -129,24 +127,21 @@ def load_config_from_path(
     Raises:
         FileNotFoundError: If the config_path file does not exist.
         TypeError: If the specified file is not a JSON file.
-        KeyError: If the config_uuid is not found in the configuration or if required keys are missing.
+        KeyError: If the config_uuid is not found in the configuration or if required 
+        keys are missing.
     """
 
     if not isinstance(config_path, Path):
         config_path = Path(config_path)
 
     if not config_path.is_file():
-        raise FileNotFoundError(
-            f'{config_path} not found.'
-        )
+        raise FileNotFoundError(f'{config_path} not found.')
 
     elif config_path.suffix != '.json':
-        raise TypeError(
-            f'{config_path} must be a .json file.'
-        )
+        raise TypeError(f'{config_path} must be a .json file.')
 
     with open(file=config_path, mode='rb') as configs_bytesio:
-        configs = json.decode(configs_bytesio.read())
+        configs = json.loads(configs_bytesio.read())
 
     for config_uuid_, config in configs.items():
         try:

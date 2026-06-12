@@ -2,12 +2,9 @@ from pathlib import Path
 import re
 from zipfile import ZipFile
 
-from beartype import beartype
-
 from .datatypes import FileLike
 
 
-@beartype
 def prevent_directory_override(
     new_directory_path: Path,
 ) -> Path:
@@ -38,13 +35,14 @@ def prevent_directory_override(
 
     n = 0
     while new_directory_path.exists():
-        new_directory_path = new_directory_path.with_stem(f'{new_directory_path.name} {n}')
+        new_directory_path = new_directory_path.with_stem(
+            f'{new_directory_path.name} {n}'
+        )
         n += 1
     new_directory_path.mkdir(parents = True)
     return new_directory_path
 
 
-@beartype
 def get_excel_sheet_names(file: FileLike) -> list[str]:
 
     """
@@ -71,7 +69,15 @@ def get_excel_sheet_names(file: FileLike) -> list[str]:
 
     with ZipFile(file, 'r') as zip_ref: 
         xml = zip_ref.read('xl/workbook.xml').decode('utf-8')
-    return [re.search(
-        'name="[^"]*', 
-        s_tag,
-    ).group(0)[6:] for s_tag in filter(None, re.findall("<sheet [^>]*", xml))]
+
+    return [
+        re.search(
+            'name="[^"]*', 
+            s_tag,
+        ).group(0)[6:]
+        for s_tag in re.findall(
+            pattern = "<sheet [^>]*", 
+            string = xml,
+        )
+        if s_tag
+    ]
