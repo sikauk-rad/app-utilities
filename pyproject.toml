@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "app_utilities"
 version = "0.0.1"
 authors = [
-  {name = "Milan Kundra", email = "kundra.milan@uk.sika.com"},
+  {name = "Milan Kundra", email = "kundra.milan@fr.sika.com"},
 ]
 dependencies = [
   "numpy>=1.0.0",
