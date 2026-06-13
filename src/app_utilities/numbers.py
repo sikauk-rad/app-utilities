@@ -1,10 +1,10 @@
 import numpy as np
 
-from .datatypes import CompatibleNumber
+from reusable_datatypes import IntOrFloat
 
 
 def get_optimal_intype(
-    number: CompatibleNumber,
+    number: IntOrFloat,
 ) -> type[np.integer] | type[np.floating]:
 
     """
@@ -50,7 +50,7 @@ def get_optimal_intype(
 
 
 def get_optimal_uintype(
-    number: CompatibleNumber,
+    number: IntOrFloat,
 ) -> type[np.integer] | type[np.floating]:
 
     """

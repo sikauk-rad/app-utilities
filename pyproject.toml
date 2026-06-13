@@ -9,11 +9,12 @@ authors = [
   {name = "Milan Kundra", email = "kundra.milan@fr.sika.com"},
 ]
 dependencies = [
-  "numpy>=1.0.0",
+    "numpy>=1.0.0",
+    "reusable_datatypes @ git+https://github.com/sikauk-rad/reusable-datatypes.git"
 ]
 description = "Package containing utility functions for apps."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",

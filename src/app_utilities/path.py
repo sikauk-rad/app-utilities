@@ -2,7 +2,7 @@ from pathlib import Path
 import re
 from zipfile import ZipFile
 
-from .datatypes import FileLike
+from reusable_datatypes import FileLike
 
 
 def prevent_directory_override(
